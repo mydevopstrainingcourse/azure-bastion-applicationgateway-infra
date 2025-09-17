@@ -1,0 +1,72 @@
+name: "Ankit Kumar GitHub"
+
+on:
+  
+  push:
+    branches:
+      - 'feature/**'
+      - 'main'
+      - 'hotfix/**'
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  terraformInit:
+    name: Terraform Init
+    runs-on: [self-hosted, Ankit-Runner-LB]
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v4
+
+    
+          
+    
+      
+        
+    - name: Azure Login using OIDC
+      uses: azure/login@v1
+      with:
+        client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+    - name: Terraform Init
+      id: Init
+      run: terraform init
+      working-directory: myrg/environment/dev/  # Set the working directory to the "terraform-config" folder
+    - name: Terraform Fmt
+      id: Fmt
+      run: terraform fmt -check
+      continue-on-error: true
+      working-directory: myrg/environment/dev/  # Set the working directory to the "terraform-config" folder
+      
+    - name: Terraform Validate
+      id: validate
+      run: terraform validate
+      working-directory: myrg/environment/dev/  # Set the working directory to the "terraform-config" folder
+      
+    - name: TFLint
+      id: tflint
+      run: tflint
+      working-directory: myrg/environment/dev/
+
+    - name: Trivy IaC Scan
+      id: trivy
+      run: trivy config .
+      working-directory: myrg/environment/dev/
+      
+    - name: Checkov Scan
+      id: checkov
+      run: checkov -d .
+      working-directory: myrg/environment/dev/
+      
+    - name: Terraform Plan
+      id: plan
+      continue-on-error: true
+      run: terraform plan
+      working-directory: myrg/environment/dev/  # Set the working directory for plan
+     
+    

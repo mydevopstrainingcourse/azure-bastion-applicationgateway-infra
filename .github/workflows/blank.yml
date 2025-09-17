@@ -15,7 +15,7 @@ permissions:
 jobs:
   terraformInit:
     name: Terraform Init
-    runs-on: [self-hosted, Ankit-Runner-LB]
+    runs-on: [self-hosted, Ankit-Kumar-AppGTW]
 
     steps:
     - name: Checkout repo

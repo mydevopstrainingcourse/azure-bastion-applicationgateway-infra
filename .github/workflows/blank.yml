@@ -36,35 +36,32 @@ jobs:
     - name: Terraform Init
       id: Init
       run: terraform init
-      working-directory: myrg/environment/dev/  # Set the working directory to the "terraform-config" folder
+      working-directory: azure-bastion-applicationgateway-infra/environment/dev/  # Set the working directory to the "terraform-config" folder
     - name: Terraform Fmt
       id: Fmt
       run: terraform fmt -check
       continue-on-error: true
-      working-directory: myrg/environment/dev/  # Set the working directory to the "terraform-config" folder
+      working-directory: azure-bastion-applicationgateway-infra/environment/dev/  # Set the working directory to the "terraform-config" folder
       
     - name: Terraform Validate
       id: validate
       run: terraform validate
-      working-directory: myrg/environment/dev/  # Set the working directory to the "terraform-config" folder
+      working-directory: azure-bastion-applicationgateway-infra/environment/dev/  # Set the working directory to the "terraform-config" folder
       
     - name: TFLint
       id: tflint
       run: tflint
-      working-directory: azure-bastion-applicationgateway-infra
-/environment/dev/
+      working-directory: azure-bastion-applicationgateway-infra/environment/dev/
 
     - name: Trivy IaC Scan
       id: trivy
       run: trivy config .
-      working-directory: azure-bastion-applicationgateway-infra
-/environment/dev/
+      working-directory: azure-bastion-applicationgateway-infra/environment/dev/
       
     - name: Checkov Scan
       id: checkov
       run: checkov -d .
-      working-directory: azure-bastion-applicationgateway-infra
-/environment/dev/
+      working-directory: azure-bastion-applicationgateway-infra/environment/dev/
       
     - name: Terraform Plan
       id: plan

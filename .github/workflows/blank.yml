@@ -67,5 +67,4 @@ jobs:
       id: plan
       continue-on-error: true
       run: terraform plan
-      working-directory: azure-bastion-applicationgateway-infra
-/environment/dev/  # Set the working directory for plan
+      working-directory: azure-bastion-applicationgateway-infra/environment/dev/  # Set the working directory for plan

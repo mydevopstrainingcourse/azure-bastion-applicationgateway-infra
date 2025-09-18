@@ -60,9 +60,7 @@ jobs:
       
     - name: Checkov Scan
       id: checkov
-      run: |
-      cd environment/dev/
-      checkov -d .
+      run: checkov -d ./environment/dev/
       
     - name: Terraform Plan
       id: plan

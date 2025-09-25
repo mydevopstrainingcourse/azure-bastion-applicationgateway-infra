@@ -8,6 +8,11 @@ on:
       - 'main'
       - 'hotfix/**'
 
+env:
+  TF_DIR: environment/dev/
+  client-id: ${{ secrets.AZURE_CLIENT_ID }}
+  tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+  subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 permissions:
   id-token: write
   contents: read
@@ -29,19 +34,19 @@ jobs:
     - name: Azure Login using OIDC
       uses: azure/login@v1
       with:
-        client-id: ${{ secrets.AZURE_CLIENT_ID }}
-        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        client-id: ${{ env.client-id }}
+        tenant-id: ${{ env.tenant-id }}
+        subscription-id: ${{ env.subscription-id }}
 
     - name: Terraform Init
       id: Init
       run: terraform init
-      working-directory: environment/dev/  # Set the working directory to the "terraform-config" folder
+      working-directory: ${{ env.TF_DIR }}  # Set the working directory to the "terraform-config" folder
     - name: Terraform Fmt
       id: Fmt
       run: terraform fmt -check
       continue-on-error: true
-      working-directory: environment/dev/  # Set the working directory to the "terraform-config" folder
+      working-directory: ${{ env.TF_DIR }}  # Set the working directory to the "terraform-config" folder
       
     - name: Terraform Validate
       id: validate
@@ -51,19 +56,19 @@ jobs:
     - name: TFLint
       id: tflint
       run: tflint
-      working-directory: environment/dev/
+      working-directory: ${{ env.TF_DIR }}
 
     - name: Trivy IaC Scan
       id: trivy
       run: trivy config .
-      working-directory: environment/dev/
+      working-directory: ${{ env.TF_DIR }}
       
     - name: Checkov Scan
       id: checkov
-      run: checkov -d ./environment/dev/ --soft-fail
+      run: checkov -d ./${{ env.TF_DIR }} --soft-fail
       
     - name: Terraform Plan
       id: plan
       continue-on-error: true
       run: terraform plan
-      working-directory: environment/dev/  # Set the working directory for plan
+      working-directory: ${{ env.TF_DIR }}  # Set the working directory for plan

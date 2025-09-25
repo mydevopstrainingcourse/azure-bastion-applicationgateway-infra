@@ -40,7 +40,7 @@ jobs:
 
     - name: Terraform Init
       id: Init
-      run: terraform init
+      run: terraform init -var "subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}"
       working-directory: ${{ env.TF_DIR }}  # Set the working directory to the "terraform-config" folder
     - name: Terraform Fmt
       id: Fmt
@@ -70,5 +70,5 @@ jobs:
     - name: Terraform Plan
       id: plan
       continue-on-error: true
-      run: terraform plan
+      run: terraform plan -var "subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}"
       working-directory: ${{ env.TF_DIR }}  # Set the working directory for plan
